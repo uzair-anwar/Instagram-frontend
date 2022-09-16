@@ -49,6 +49,7 @@ const Login = () => {
         <div className="header">
           <h5>Create Account</h5>
         </div>
+
         <div>
           <form onSubmit={formik.handleSubmit} className="login-form">
             <input
@@ -78,6 +79,7 @@ const Login = () => {
               onBlur={formik.handleBlur}
               label="Enter Password"
             />
+
             {formik.touched.password && formik.errors.password ? (
               <div className="error-msg">{formik.errors.password}</div>
             ) : null}
@@ -85,6 +87,7 @@ const Login = () => {
             <Button className="button" type="submit">
               Log in
             </Button>
+
             {error !== null ? <div className="error-msg">{error}</div> : null}
           </form>
         </div>

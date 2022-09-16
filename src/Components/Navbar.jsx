@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "../app/features/user/userAction";
 import { logout } from "../app/features/user/userSlice";
 import "../StyleSheets/navbar-style.css";
+
 const Navbar = () => {
   const { userToken } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const Navbar = () => {
       dispatch(getUserDetails());
     }
   }, [userToken, dispatch]);
+
   return (
     <nav>
       <div className="nav-wrapper white">

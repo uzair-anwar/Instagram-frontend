@@ -2,7 +2,6 @@ import React from "react";
 import "../StyleSheets/navbar-style.css";
 
 const Profile = () => {
-  console.log("Uzair");
   return (
     <div style={{ maxWidth: "550px", margin: "0px auto" }}>
       <div
@@ -21,7 +20,7 @@ const Profile = () => {
             <img
               style={{ width: "160px", height: "160px", borderRadius: "80px" }}
               src="https://res.cloudinary.com/instagram-clone-testproject/image/upload/v1663158422/insta-clone/p3anol9jmzo8e58b1ymg.jpg"
-              alt="Uzair"
+              alt="Profile"
             />
           </div>
           <div>
@@ -45,32 +44,32 @@ const Profile = () => {
         <img
           className="item"
           src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="Uzair"
+          alt="Post"
         />
         <img
           className="item"
           src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="Uzair"
+          alt="Post"
         />
         <img
           className="item"
           src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="Uzair"
+          alt="Post"
         />
         <img
           className="item"
           src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="Uzair"
+          alt="Post"
         />
         <img
           className="item"
           src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="Uzair"
+          alt="Post"
         />
         <img
           className="item"
           src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="Uzair"
+          alt="Post"
         />
       </div>
     </div>

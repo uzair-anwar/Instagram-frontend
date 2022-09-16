@@ -1,4 +1,5 @@
 import React from "react";
+
 const Home = () => {
   return (
     <div className="home">
@@ -7,7 +8,7 @@ const Home = () => {
         <div className="card-image">
           <img
             src="https://res.cloudinary.com/instagram-clone-testproject/image/upload/v1663158422/insta-clone/p3anol9jmzo8e58b1ymg.jpg"
-            alt="Uzair"
+            alt="PostImage"
           ></img>
         </div>
         <div className="card-content">

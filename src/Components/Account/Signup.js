@@ -5,8 +5,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../../StyleSheets/account-style.css";
-//import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { registerUser } from "../../app/features/user/userAction";
 
 const Signup = () => {
@@ -151,6 +149,7 @@ const Signup = () => {
             <Button className="button" type="submit" disabled={loading}>
               Sign Up
             </Button>
+
             {error !== null ? <div className="error-msg">{error}</div> : null}
           </form>
         </div>
