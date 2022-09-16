@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "../app/features/user/userAction";
 import { logout } from "../app/features/user/userSlice";
+import { removePost } from "../app/features/post/postSlice";
 import "../StyleSheets/navbar-style.css";
 
 const Navbar = () => {
@@ -16,6 +17,10 @@ const Navbar = () => {
     }
   }, [userToken, dispatch]);
 
+  const logoutUser = () => {
+    dispatch(logout());
+    dispatch(removePost());
+  };
   return (
     <nav>
       <div className="nav-wrapper white">
@@ -25,20 +30,32 @@ const Navbar = () => {
         <ul id="nav-mobile" className="right">
           {userToken ? (
             <>
-              <button className="button" onClick={() => dispatch(logout())}>
+              <li>
+                <NavLink className="btn btn-secondary" to="/create">
+                  Create
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="btn btn-secondary" to="/profile">
+                  Profile
+                </NavLink>
+              </li>
+              <button className="btn btn-danger" onClick={logoutUser}>
                 Logout
               </button>
-              <li>
-                <Link to="/profile">Profile</Link>
-              </li>
             </>
           ) : (
             <>
               <li>
-                <Link to="/login"> Login </Link>
+                <NavLink className="btn btn-success" to="/login">
+                  Login{" "}
+                </NavLink>
               </li>
               <li>
-                <Link to="/signup"> Signup </Link>
+                <NavLink className="btn btn-success" to="/signup">
+                  {" "}
+                  Signup{" "}
+                </NavLink>
               </li>
             </>
           )}
