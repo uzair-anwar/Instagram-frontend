@@ -72,7 +72,6 @@ const CreatePost = () => {
           </div>
         ))}
       </div>
-
       <div className="form-group">
         <input
           type="file"

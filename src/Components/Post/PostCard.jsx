@@ -150,7 +150,6 @@ const PostCard = ({ post }) => {
             </SwiperSlide>
           ))}
         </Swiper>
-
         <CardActions disableSpacing>
           <span onClick={submitLike}>
             <IconButton>
