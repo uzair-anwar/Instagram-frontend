@@ -8,6 +8,8 @@ import Profile from "../Pages/Profile";
 import ProtectedRoute from "./ProtectedRoutes";
 import UndefineRoutes from "./UndefinedRoutes";
 import CreatePost from "../Pages/CreatePost";
+import EditPost from "../Pages/EditPost";
+
 const BasicRoutes = () => {
   return (
     <BrowserRouter>
@@ -19,6 +21,7 @@ const BasicRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create" element={<CreatePost />} />
+          <Route path="/Post/:id/edit" element={<EditPost />} />
         </Route>
         <Route path="*" element={<UndefineRoutes />} />
       </Routes>
