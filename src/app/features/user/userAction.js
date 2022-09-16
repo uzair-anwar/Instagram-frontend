@@ -69,7 +69,7 @@ export const getUserDetails = createAsyncThunk(
         `${process.env.REACT_APP_SERVER_API}/auth/getUser`,
         config
       );
-      return data;
+      return data.result;
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);

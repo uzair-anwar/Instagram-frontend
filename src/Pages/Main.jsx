@@ -14,7 +14,7 @@ const Main = () => {
     }
   }, [userToken, dispatch]);
 
-  return <Home />;
+  return userToken ? <Home /> : <h1>Hy</h1>;
 };
 
 export default Main;

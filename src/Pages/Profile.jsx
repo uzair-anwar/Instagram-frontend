@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails } from "../app/features/user/userAction";
 import "../StyleSheets/navbar-style.css";
 
 const Profile = () => {
-  console.log("Uzair");
+  const { userInfo, userToken } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  // automatically authenticate user if token is found
+  useEffect(() => {
+    if (userToken) {
+      dispatch(getUserDetails());
+    }
+  }, [userToken, dispatch]);
   return (
     <div style={{ maxWidth: "550px", margin: "0px auto" }}>
       <div
@@ -20,13 +30,13 @@ const Profile = () => {
           <div>
             <img
               style={{ width: "160px", height: "160px", borderRadius: "80px" }}
-              src="https://res.cloudinary.com/instagram-clone-testproject/image/upload/v1663158422/insta-clone/p3anol9jmzo8e58b1ymg.jpg"
-              alt="Uzair"
+              src={userInfo.image}
+              alt="Profile Pic"
             />
           </div>
           <div>
-            <h4>Uzair</h4>
-            <h5>uzair.anwar@devsinc.com</h5>
+            <h4>{userInfo.name}</h4>
+            <h5>{userInfo.email}</h5>
             <div
               style={{
                 display: "flex",
