@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../StyleSheets/navbar-style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewPost } from "../app/features/post/postAction";
+import { createNewPost, getAllPost } from "../app/features/post/postAction";
 
 const CreatePost = () => {
   const { error, success } = useSelector((state) => state.post);
@@ -10,14 +10,18 @@ const CreatePost = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (success) navigate("/");
-  }, [navigate, success]);
+    if (success) {
+      dispatch(getAllPost());
+      navigate("/");
+    }
+  }, [navigate, success, dispatch]);
 
   const fileObj = [];
   const fileArray = [];
   const [caption, setCaption] = useState("");
   const [displayImages, setDisplayImages] = useState([]);
   const [images, setImages] = useState("");
+  const [fieldError, setFieldError] = useState(null);
 
   const uploadMultipleFiles = (e) => {
     fileObj.push(e.target.files);
@@ -28,13 +32,27 @@ const CreatePost = () => {
     setDisplayImages(fileArray);
   };
 
-  const uploadPost = () => {
-    const formData = new FormData();
-    formData.append("caption", caption);
-    for (let i = 0; i < images.length; i++) {
-      formData.append("images", images[i]);
+  const checkFields = () => {
+    if (caption.length === 0) {
+      setFieldError("Caption is required");
+      return false;
     }
-    dispatch(createNewPost(formData));
+    if (images.length === 0) {
+      setFieldError("Images is required");
+      return false;
+    }
+    return true;
+  };
+
+  const uploadPost = () => {
+    if (checkFields()) {
+      const formData = new FormData();
+      formData.append("caption", caption);
+      for (let i = 0; i < images.length; i++) {
+        formData.append("images", images[i]);
+      }
+      dispatch(createNewPost(formData));
+    }
   };
 
   return (
@@ -42,9 +60,11 @@ const CreatePost = () => {
       <input
         type="text"
         placeholder="Caption"
+        required
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
       />
+
       <div className="row">
         {displayImages.map((url, index) => (
           <div className="col-md-4" key={index}>
@@ -52,6 +72,7 @@ const CreatePost = () => {
           </div>
         ))}
       </div>
+
       <div className="form-group">
         <input
           type="file"
@@ -60,11 +81,16 @@ const CreatePost = () => {
           multiple
         />
       </div>
+
       <br />
+
       <button className="btn btn-primary" onClick={uploadPost}>
         Submit post
       </button>
+
       {error !== null ? <div className="error-msg">{error}</div> : null}
+
+      {fieldError ? <div className="error-msg">{fieldError}</div> : null}
     </div>
   );
 };

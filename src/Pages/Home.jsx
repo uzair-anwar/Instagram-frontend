@@ -3,13 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../app/features/post/postAction";
 import PostCard from "../Components/Post/PostCard";
 const Home = () => {
-  const { posts } = useSelector((state) => state.post);
+  const { posts, deleteSuccess, editSuccess } = useSelector(
+    (state) => state.post
+  );
+
   const dispatch = useDispatch();
+
   useEffect(() => {
-    if (posts == null) {
+    if (posts == null || deleteSuccess || editSuccess) {
       dispatch(getAllPost());
     }
-  }, [posts, dispatch]);
+  }, [posts, dispatch, deleteSuccess, editSuccess]);
+
   return posts?.map((post, index) => (
     <div key={index}>
       <PostCard post={post} />
