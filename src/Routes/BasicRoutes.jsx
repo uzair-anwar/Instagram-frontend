@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-//import { UserProvider } from "./Context/userContext";
 import Login from "../Components/Account/Login";
 import Signup from "../Components/Account/Signup";
 import Navbar from "../Components/Navbar";
