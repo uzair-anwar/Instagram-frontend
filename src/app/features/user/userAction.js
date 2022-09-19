@@ -81,3 +81,61 @@ export const getUserDetails = createAsyncThunk(
     }
   }
 );
+
+export const searchUsers = createAsyncThunk(
+  "user/searchUsers",
+  async (name, { getState, rejectWithValue }) => {
+    try {
+      // get user data from store
+      const { user } = getState();
+
+      // configure authorization header with user's token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVER_API}/auth/${name}`,
+        config
+      );
+      return data.result;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const setFollow = createAsyncThunk(
+  "user/follow",
+  async ({ followUserId }, { getState, rejectWithValue }) => {
+    try {
+      // get user data from store
+      const { user } = getState();
+      console.log(followUserId);
+
+      // configure authorization header with user's token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVER_API}/auth/follow/${followUserId}`,
+        config
+      );
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);

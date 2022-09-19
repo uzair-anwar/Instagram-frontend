@@ -51,7 +51,6 @@ export const getPostComment = createAsyncThunk(
         `${process.env.REACT_APP_SERVER_API}/post/${postId}/comments`,
         config
       );
-      console.log(data.result);
       return data.result;
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -104,7 +103,6 @@ export const deleteComment = createAsyncThunk(
       // get user data from store
       const { user } = getState();
       const { id, postId } = arg;
-      console.log(id, postId);
 
       // make request to backend
       const { data } = await axios({
@@ -115,7 +113,6 @@ export const deleteComment = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      console.log(data);
       return data;
     } catch (error) {
       // return custom error message from API if any

@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserDetails, registerUser, userLogin } from "./userAction";
+import {
+  getUserDetails,
+  registerUser,
+  userLogin,
+  searchUsers,
+  setFollow,
+} from "./userAction";
 
 const userToken = localStorage.getItem("userToken")
   ? localStorage.getItem("userToken")
@@ -11,6 +17,9 @@ const initialState = {
   userToken: userToken, // for storing the JWT
   error: null,
   success: false, // for monitoring the registration process.
+  searchedUsers: null,
+  searchSuccess: false,
+  followSuccess: false,
 };
 
 const userSlice = createSlice({
@@ -63,8 +72,33 @@ const userSlice = createSlice({
     [getUserDetails.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.userInfo = payload;
+      state.searchSuccess = false;
     },
     [getUserDetails.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+
+    // search User
+    [searchUsers.pending]: (state) => {
+      state.loading = true;
+    },
+    [searchUsers.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.searchSuccess = true;
+      state.searchedUsers = payload;
+    },
+    [searchUsers.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+
+    [setFollow.pending]: (state) => {
+      state.loading = true;
+    },
+    [setFollow.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.followSuccess = true;
+    },
+    [setFollow.rejected]: (state, { payload }) => {
       state.loading = false;
     },
   },

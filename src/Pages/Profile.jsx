@@ -1,11 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails } from "../app/features/user/userAction";
+import { useLocation } from "react-router-dom";
+import { getUserDetails, setFollow } from "../app/features/user/userAction";
 import "../StyleSheets/navbar-style.css";
 
 const Profile = () => {
-  const { userInfo, userToken } = useSelector((state) => state.user);
+  let { searchSuccess, searchedUsers, userInfo, userToken } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
+  const location = useLocation();
+  const check = location.state?.check;
+  const [followText, setFollowText] = useState("Fellow");
 
   // automatically authenticate user if token is found
   useEffect(() => {
@@ -13,6 +19,23 @@ const Profile = () => {
       dispatch(getUserDetails());
     }
   }, [userToken, dispatch]);
+
+  useEffect(() => {
+    if (check) {
+      dispatch(getUserDetails());
+    }
+  }, [check, dispatch]);
+
+  if (searchSuccess) {
+    userInfo = searchedUsers[0];
+  }
+
+  const handleFellow = () => {
+    dispatch(setFollow({ followUserId: userInfo.id }));
+    if (followText === "Fellow") setFollowText("Unfollow");
+    else setFollowText("Fellow");
+  };
+
   return (
     <div style={{ maxWidth: "550px", margin: "0px auto" }}>
       <div
@@ -30,13 +53,13 @@ const Profile = () => {
           <div>
             <img
               style={{ width: "160px", height: "160px", borderRadius: "80px" }}
-              src={userInfo.image}
+              src={userInfo?.image}
               alt="Profile Pic"
             />
           </div>
           <div>
-            <h4>{userInfo.name}</h4>
-            <h5>{userInfo.email}</h5>
+            <h4>{userInfo?.name}</h4>
+            <h5>{userInfo?.email}</h5>
             <div
               style={{
                 display: "flex",
@@ -48,6 +71,13 @@ const Profile = () => {
               <h6>10 followers</h6>
               <h6>10 following</h6>
             </div>
+            {searchSuccess ? (
+              <div>
+                <button className="btn btn-primary" onClick={handleFellow}>
+                  {followText}
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

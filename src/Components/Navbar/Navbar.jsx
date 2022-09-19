@@ -1,14 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails } from "../app/features/user/userAction";
-import { logout } from "../app/features/user/userSlice";
-import { removePost } from "../app/features/post/postSlice";
-import "../StyleSheets/navbar-style.css";
+import {
+  getUserDetails,
+  searchUsers,
+} from "../../app/features/user/userAction";
+import { logout } from "../../app/features/user/userSlice";
+import { removePost } from "../../app/features/post/postSlice";
+import "../../StyleSheets/navbar-style.css";
+import SearchField from "./SearchField";
 
 const Navbar = () => {
-  const { userToken } = useSelector((state) => state.user);
+  const { userInfo, searchedUsers, userToken } = useSelector(
+    (state) => state.user
+  );
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
+  const [options, setOptions] = useState([]);
+  useEffect(() => {
+    if (searchUsers != null) setOptions(searchedUsers);
+  }, [searchedUsers]);
+
+  const onInputChange = (event) => {
+    if (event.target.value.length > 0) {
+      dispatch(searchUsers(event.target.value));
+      if (searchUsers != null) setOptions(searchedUsers);
+    } else {
+      setOptions([]);
+    }
+  };
+
+  const onClickInput = () => {
+    navigate("/profile");
+  };
 
   // automatically authenticate user if token is found
   useEffect(() => {
@@ -27,16 +53,28 @@ const Navbar = () => {
         <Link to="/" className="brand-logo left">
           Instagram
         </Link>
+
         <ul id="nav-mobile" className="right">
           {userToken ? (
             <>
+              <li>
+                <SearchField
+                  options={options}
+                  onInputChange={onInputChange}
+                  onClickInput={onClickInput}
+                />
+              </li>
               <li>
                 <NavLink className="btn btn-secondary" to="/create">
                   Create
                 </NavLink>
               </li>
               <li>
-                <NavLink className="btn btn-secondary" to="/profile">
+                <NavLink
+                  className="btn btn-secondary"
+                  to={"/profile"}
+                  state={{ check: true }}
+                >
                   Profile
                 </NavLink>
               </li>
