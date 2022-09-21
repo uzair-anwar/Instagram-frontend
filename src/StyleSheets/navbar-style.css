@@ -28,15 +28,6 @@ a {
   float: left;
 }
 
-img {
-  border: 0 none;
-  margin-bottom: 10px;
-  display: inline-block;
-  height: auto;
-  max-width: 100%;
-  vertical-align: middle;
-}
-
 .create-post {
   margin: 30px auto;
   max-width: 500px;

@@ -5,6 +5,7 @@ import {
   userLogin,
   searchUsers,
   setFollow,
+  getFollowings,
 } from "./userAction";
 
 const userToken = localStorage.getItem("userToken")
@@ -20,6 +21,7 @@ const initialState = {
   searchedUsers: null,
   searchSuccess: false,
   followSuccess: false,
+  followings: null,
 };
 
 const userSlice = createSlice({
@@ -99,6 +101,18 @@ const userSlice = createSlice({
       state.followSuccess = true;
     },
     [setFollow.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+
+    //gry following
+    [getFollowings.pending]: (state) => {
+      state.loading = true;
+    },
+    [getFollowings.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.followings = payload;
+    },
+    [getFollowings.rejected]: (state, { payload }) => {
       state.loading = false;
     },
   },

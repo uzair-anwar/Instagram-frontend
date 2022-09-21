@@ -8,17 +8,15 @@ import {
 } from "../../app/features/user/userAction";
 import { logout } from "../../app/features/user/userSlice";
 import { removePost } from "../../app/features/post/postSlice";
-import "../../StyleSheets/navbar-style.css";
 import SearchField from "./SearchField";
 
 const Navbar = () => {
-  const { userInfo, searchedUsers, userToken } = useSelector(
-    (state) => state.user
-  );
+  const { searchedUsers, userToken } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
+
   useEffect(() => {
     if (searchUsers != null) setOptions(searchedUsers);
   }, [searchedUsers]);
@@ -47,6 +45,10 @@ const Navbar = () => {
     dispatch(logout());
     dispatch(removePost());
   };
+
+  const handleStory = () => {
+    navigate("/createStory");
+  };
   return (
     <nav>
       <div className="nav-wrapper white">
@@ -63,6 +65,11 @@ const Navbar = () => {
                   onInputChange={onInputChange}
                   onClickInput={onClickInput}
                 />
+              </li>
+              <li>
+                <button className="btn btn-success" onClick={handleStory}>
+                  Story
+                </button>
               </li>
               <li>
                 <NavLink className="btn btn-secondary" to="/create">

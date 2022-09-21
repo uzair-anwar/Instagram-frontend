@@ -31,7 +31,7 @@ const Profile = () => {
   }
 
   const handleFellow = () => {
-    dispatch(setFollow({ followUserId: userInfo.id }));
+    dispatch(setFollow({ followId: userInfo.id }));
     if (followText === "Fellow") setFollowText("Unfollow");
     else setFollowText("Fellow");
   };
