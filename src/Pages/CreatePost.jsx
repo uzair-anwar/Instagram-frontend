@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Input } from "@material-ui/core";
 import "../StyleSheets/navbar-style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewPost, getAllPost } from "../app/features/post/postAction";
@@ -41,6 +42,10 @@ const CreatePost = () => {
       setFieldError("Images is required");
       return false;
     }
+    if (images.length > 10) {
+      setFieldError("Only 10 images are allowed");
+      return false;
+    }
     return true;
   };
 
@@ -57,7 +62,8 @@ const CreatePost = () => {
 
   return (
     <div className="card input-filed create-post">
-      <input
+      <Input
+        className="my-2"
         type="text"
         placeholder="Caption"
         required
@@ -67,7 +73,7 @@ const CreatePost = () => {
 
       <div className="row">
         {displayImages.map((url, index) => (
-          <div className="col-md-4" key={index}>
+          <div className="col-md-4 col-lg-6 col-lg-8" key={index}>
             <img src={url} alt="..." className="img-responsive inline-block" />
           </div>
         ))}

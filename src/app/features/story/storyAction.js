@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createUserStory = createAsyncThunk(
   // action type string
-  "story/create",
+  "story/createStory",
   // callback function
   async (formData, { getState, rejectWithValue }) => {
     try {
@@ -45,6 +45,62 @@ export const getUserStories = createAsyncThunk(
       };
       const { data } = await axios.get(
         `${process.env.REACT_APP_SERVER_API}/story/${userId}`,
+        config
+      );
+      return data.result;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const getSelfStories = createAsyncThunk(
+  "story/getSelfStories",
+  async (arg, { getState, rejectWithValue }) => {
+    try {
+      // get user data from store
+      const { user } = getState();
+
+      // configure authorization header with user's token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVER_API}/story/getStories`,
+        config
+      );
+      return data.result;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const deleteStory = createAsyncThunk(
+  "story/deleteStory",
+  async ({ id }, { getState, rejectWithValue }) => {
+    try {
+      // get user data from store
+      const { user } = getState();
+
+      // configure authorization header with user's token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      };
+      const { data } = await axios.delete(
+        `${process.env.REACT_APP_SERVER_API}/story/delete/${id}`,
         config
       );
       return data.result;

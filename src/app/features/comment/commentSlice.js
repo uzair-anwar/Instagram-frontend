@@ -3,6 +3,7 @@ import {
   createNewComment,
   getPostComment,
   editComment,
+  deleteComment,
 } from "../comment/commentAction";
 
 const initialState = {
@@ -13,12 +14,20 @@ const initialState = {
   postComment: null,
   editSuccess: false,
   editComment: null,
+  deleteSucess: false,
+  deletedComment: null,
 };
 
 const commentSlice = createSlice({
   name: "comment",
   initialState,
-  reducers: {},
+  reducers: {
+    deletePostComment: (state, action) => {
+      state.postComment = state.postComment.filter(
+        (comment) => comment.id !== action.payload.id
+      );
+    },
+  },
   extraReducers: {
     // get All likes of a post
     [createNewComment.pending]: (state) => {},
@@ -49,7 +58,19 @@ const commentSlice = createSlice({
       state.editComment = payload;
     },
     [editComment.rejected]: (state, { payload }) => {},
+
+    // get Post Comment
+    [deleteComment.pending]: (state) => {},
+    [deleteComment.fulfilled]: (state, { payload }) => {
+      if (payload.status == 200) {
+        state.deleteSucess = true;
+      }
+      state.deletedComment = payload;
+    },
+    [deleteComment.rejected]: (state, { payload }) => {},
   },
 });
+
+export const { deletePostComment } = commentSlice.actions;
 
 export default commentSlice.reducer;

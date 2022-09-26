@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, Paper, Input } from "@material-ui/core";
 import { useFormik } from "formik";
@@ -6,6 +6,20 @@ import * as Yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../../StyleSheets/account-style.css";
 import { registerUser } from "../../app/features/user/userAction";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const notify = (message) => {
+  toast.info(message, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 const Signup = () => {
   const [image, setImage] = useState(null);
@@ -17,11 +31,23 @@ const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // redirect user to login page if registration was successful
-    if (success) navigate("/login");
-    // redirect authenticated user to profile screen
-    if (userToken) navigate("/profile");
-  }, [navigate, userToken, success]);
+    if (loading == true) {
+      notify("Account creation is in process, please wait");
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (success) {
+      notify("Account created successfully");
+      navigate("/login");
+    }
+    if (userToken) {
+      notify(
+        "You already have a account, Please logout first and then make a new one"
+      );
+      navigate("/profile");
+    }
+  }, [userToken, success]);
 
   const onSubmit = async (values) => {
     // eslint-disable-next-line no-restricted-globals
@@ -40,8 +66,10 @@ const Signup = () => {
   const formik = useFormik({
     initialValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
+      passwordConfirmation: "",
       image: "",
     },
 
@@ -51,7 +79,6 @@ const Signup = () => {
         .required("Required")
         .max(25, "Must be 25 characters or less"),
       username: Yup.string()
-        .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for name ")
         .required("Required")
         .max(10, "Must be 10 characters or less"),
       email: Yup.string().required("Required").email("Invalid email address"),
@@ -59,6 +86,10 @@ const Signup = () => {
       password: Yup.string()
         .min(6, "password should be greater than 6 digit")
         .required("Required"),
+      passwordConfirmation: Yup.string().oneOf(
+        [Yup.ref("password"), null],
+        "Passwords must match"
+      ),
     }),
     onSubmit,
   });
@@ -71,7 +102,7 @@ const Signup = () => {
         </div>
         <div>
           <form onSubmit={formik.handleSubmit} className="login-form">
-            <input
+            <Input
               className="input"
               placeholder="Enter Name"
               id="name"
@@ -87,7 +118,7 @@ const Signup = () => {
               <div className="error-msg">{formik.errors.name}</div>
             ) : null}
 
-            <input
+            <Input
               className="input"
               placeholder="Enter user name"
               id="username"
@@ -103,7 +134,7 @@ const Signup = () => {
               <div className="error-msg">{formik.errors.username}</div>
             ) : null}
 
-            <input
+            <Input
               className="input"
               placeholder="Enter Email"
               id="email"
@@ -119,7 +150,7 @@ const Signup = () => {
               <div className="error-msg">{formik.errors.email}</div>
             ) : null}
 
-            <input
+            <Input
               className="input"
               placeholder="Enter Password"
               id="password"
@@ -128,11 +159,30 @@ const Signup = () => {
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              label="Enter Password"
+              label="Enter  Password"
             />
 
             {formik.touched.password && formik.errors.password ? (
               <div className="error-msg">{formik.errors.password}</div>
+            ) : null}
+
+            <Input
+              className="input"
+              placeholder="Enter Confirm Password"
+              id="passwordConfirmation"
+              name="passwordConfirmation"
+              type="password"
+              value={formik.values.passwordConfirmation}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              label="Enter Confirm Password"
+            />
+
+            {formik.touched.passwordConfirmation &&
+            formik.errors.passwordConfirmation ? (
+              <div className="error-msg">
+                {formik.errors.passwordConfirmation}
+              </div>
             ) : null}
 
             <label className="label">Image for Profile</label>
@@ -144,9 +194,10 @@ const Signup = () => {
                 setImage(e.target.files[0]);
               }}
               onBlur={formik.handleBlur}
+              required
             />
 
-            <Button className="button" type="submit" disabled={loading}>
+            <Button className="button" type="submit">
               Sign Up
             </Button>
 

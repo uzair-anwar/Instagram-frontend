@@ -11,7 +11,7 @@ const Story = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const userId = location.state.userId;
+  const userId = location.state?.userId;
 
   const [urls, setUrls] = useState([]);
 

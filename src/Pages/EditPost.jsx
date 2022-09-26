@@ -3,6 +3,23 @@ import "../StyleSheets/navbar-style.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editPost } from "../app/features/post/postAction";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
+
+const notify = (message) => {
+  if (message !== undefined) {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
+};
 
 const EditPost = () => {
   const location = useLocation();
@@ -11,7 +28,7 @@ const EditPost = () => {
   const post = location.state.post;
   const id = post.id;
   const [caption, setCaption] = useState(post.caption);
-  const [displayImages, setDisplayImages] = useState([...post.url]);
+  const [displayImages, setDisplayImages] = useState(post.images);
   const { edit, editSuccess } = useSelector((state) => state.post);
   const [error, setError] = useState(null);
 
@@ -30,7 +47,9 @@ const EditPost = () => {
   };
 
   const handleEditPost = () => {
-    if (checkCaption()) dispatch(editPost({ caption, id }));
+    if (checkCaption()) {
+      dispatch(editPost({ caption, id }));
+    }
   };
 
   return (
@@ -43,9 +62,13 @@ const EditPost = () => {
       />
 
       <div className="row">
-        {displayImages.map((url, index) => (
-          <div className="col-md-4" key={index}>
-            <img src={url} alt="..." className="img-responsive inline-block" />
+        {displayImages.map((image, index) => (
+          <div key={index}>
+            <img
+              src={image.url}
+              alt="..."
+              className="img-responsive inline-block"
+            />
           </div>
         ))}
       </div>

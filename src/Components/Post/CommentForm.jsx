@@ -1,15 +1,35 @@
 import React, { useState } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   editComment,
   getPostComment,
   deleteComment,
 } from "../../app/features/comment/commentAction";
+import "../../StyleSheets/comment-style.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { deletePostComment } from "../../app/features/comment/commentSlice";
+toast.configure();
+
+const notify = (message) => {
+  if (message !== undefined) {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
+};
 
 const CommentForm = ({ comment }) => {
   const [commentText, setCommentText] = useState("");
   const [commentSection, setCommentSection] = useState(false);
+  const { deletedComment } = useSelector((state) => state.comment);
 
   const dispatch = useDispatch();
 
@@ -26,12 +46,17 @@ const CommentForm = ({ comment }) => {
   };
 
   const handleCommentDelete = () => {
-    dispatch(deleteComment({ id: comment.id, postId: comment.postId }));
-    dispatch(getPostComment({ postId: comment.postId }));
+    dispatch(deleteComment({ id: comment.id, postId: comment.postId })).then(
+      () => {
+        notify(deletedComment?.message);
+        dispatch(deletePostComment({ id: comment.id }));
+      }
+    );
   };
+
   return (
     <>
-      {commentSection === true ? (
+      {commentSection ? (
         <>
           <textarea
             defaultValue={comment.body}
@@ -42,15 +67,21 @@ const CommentForm = ({ comment }) => {
           </button>
         </>
       ) : (
-        <h6>{comment.body}</h6>
+        <>
+          <hr />
+          <div>
+            <h4>Commenter Name: {comment.user.name}</h4>
+            <h6>Comment: {comment.body}</h6>
+          </div>
+        </>
       )}
-      <div>
-        <span onClick={handleEdit}>
+      <div className="comment">
+        <div className="edit-comment" onClick={handleEdit}>
           <AiFillEdit />
-        </span>
-        <span onClick={handleCommentDelete}>
+        </div>
+        <div className="edit-comment" onClick={handleCommentDelete}>
           <AiFillDelete />
-        </span>
+        </div>
       </div>
     </>
   );

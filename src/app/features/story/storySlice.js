@@ -1,14 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createUserStory, getUserStories } from "./storyAction";
+import {
+  createUserStory,
+  getUserStories,
+  getSelfStories,
+  deleteStory,
+} from "./storyAction";
 
 const initialState = {
   loading: false,
   story: null,
   storyGet: false,
   firstTime: true,
-  storyMessage: null, // for storing the JWT
+  storyMessage: null,
   error: null,
-  success: false, // for monitoring the registration process.
+  success: false,
+  selfStories: null,
+  selfStoriesStatus: false,
+  deleteStoryStatus: false,
 };
 
 const storySlice = createSlice({
@@ -18,16 +26,24 @@ const storySlice = createSlice({
     removeStory: (state) => {
       state.story = null;
     },
+    deleteSingleStory: (state, action) => {
+      state.selfStories = state.selfStories.filter(
+        (story) => story.id !== action.payload
+      );
+    },
+    unSuccess: (state) => {
+      state.success = false;
+    },
   },
   extraReducers: {
-    //login user
+    //Cretae Story
     [createUserStory.pending]: (state) => {
       state.loading = true;
       state.error = null;
     },
     [createUserStory.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.success = true; // registration successful
+      state.success = true;
       state.storyMessage = payload;
     },
     [createUserStory.rejected]: (state, { payload }) => {
@@ -35,22 +51,51 @@ const storySlice = createSlice({
       state.error = payload;
     },
 
-    // register user
+    // Get follewer Stories
     [getUserStories.pending]: (state) => {
       state.loading = true;
       state.error = null;
     },
     [getUserStories.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.storyGet = true; // registration successful
+      state.storyGet = true;
       state.story = payload;
     },
     [getUserStories.rejected]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     },
+
+    // Get self stories
+    [getSelfStories.pending]: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [getSelfStories.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.selfStoriesStatus = true;
+      state.selfStories = payload;
+    },
+    [getSelfStories.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+    },
+
+    // Delete a story
+    [deleteStory.pending]: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [deleteStory.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.deleteStoryStatus = payload;
+    },
+    [deleteStory.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+    },
   },
 });
 
-export const { removeStory } = storySlice.actions;
+export const { unSuccess, removeStory, deleteSingleStory } = storySlice.actions;
 export default storySlice.reducer;

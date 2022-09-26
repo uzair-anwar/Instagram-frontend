@@ -10,6 +10,10 @@ import CreatePost from "../Pages/CreatePost";
 import EditPost from "../Pages/EditPost";
 import CreateStory from "../Components/story/CreateStory";
 import Story from "../Components/story/Story";
+import EditProfile from "../Components/Account/EditProfile";
+import UpdatePassword from "../Components/Account/UpdatePassword";
+import Email from "../Components/Account/Email";
+import NewPassword from "../Components/Account/NewPassword";
 
 const BasicRoutes = () => {
   return (
@@ -19,9 +23,14 @@ const BasicRoutes = () => {
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/sendEmail" element={<Email />} />
+        <Route path="/forgetPassword" element={<NewPassword />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/editProfile" element={<EditProfile />} />
+          <Route path="/updatePassword" element={<UpdatePassword />} />
           <Route path="/create" element={<CreatePost />} />
+          <Route path="/showPost" element={<CreatePost />} />
           <Route path="/Post/:id/edit" element={<EditPost />} />
           <Route path="/createStory" element={<CreateStory />} />
           <Route path="/showStory" element={<Story />} />

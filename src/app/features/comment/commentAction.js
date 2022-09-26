@@ -14,7 +14,7 @@ export const createNewComment = createAsyncThunk(
       // make request to backend
       const { data } = await axios({
         method: "POST",
-        url: `${process.env.REACT_APP_SERVER_API}/post/${postId}/comment`,
+        url: `${process.env.REACT_APP_SERVER_API}/post/${postId}/createComment`,
         data: { body },
         headers: {
           Authorization: `Bearer ${user.userToken}`,

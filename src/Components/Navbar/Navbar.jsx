@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   getUserDetails,
   searchUsers,
+  getSearchedUserDetails,
+  getFollowStatus,
 } from "../../app/features/user/userAction";
 import { logout } from "../../app/features/user/userSlice";
 import { removePost } from "../../app/features/post/postSlice";
@@ -31,6 +33,8 @@ const Navbar = () => {
   };
 
   const onClickInput = () => {
+    dispatch(getSearchedUserDetails({ searchedId: searchedUsers[0].id }));
+    dispatch(getFollowStatus({ searchedId: searchedUsers[0].id }));
     navigate("/profile");
   };
 
@@ -46,66 +50,58 @@ const Navbar = () => {
     dispatch(removePost());
   };
 
-  const handleStory = () => {
-    navigate("/createStory");
-  };
   return (
-    <nav>
-      <div className="nav-wrapper white">
-        <Link to="/" className="brand-logo left">
-          Instagram
-        </Link>
+    <nav className="navbar navbar-expand-lg navbar-expand-sm  navbar-light bg-white justify-content-between">
+      <NavLink to="/" className="navbar-brand insta-logo left">
+        Instagram
+      </NavLink>
 
-        <ul id="nav-mobile" className="right">
-          {userToken ? (
-            <>
-              <li>
-                <SearchField
-                  options={options}
-                  onInputChange={onInputChange}
-                  onClickInput={onClickInput}
-                />
-              </li>
-              <li>
-                <button className="btn btn-success" onClick={handleStory}>
-                  Story
-                </button>
-              </li>
-              <li>
-                <NavLink className="btn btn-secondary" to="/create">
-                  Create
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className="btn btn-secondary"
-                  to={"/profile"}
-                  state={{ check: true }}
-                >
-                  Profile
-                </NavLink>
-              </li>
+      <ul id="nav-mobile" className="navbar-nav float-right">
+        {userToken ? (
+          <>
+            <li className="search-field nav-item mx-1">
+              <SearchField
+                options={options}
+                onInputChange={onInputChange}
+                onClickInput={onClickInput}
+              />
+            </li>
+            <li className="nav-item mx-1">
+              <NavLink className="btn btn-danger" to="/create">
+                Post
+              </NavLink>
+            </li>
+            <li className="nav-item mx-1">
+              <NavLink
+                className="btn btn-secondary"
+                to={"/profile"}
+                state={{ check: true }}
+              >
+                Profile
+              </NavLink>
+            </li>
+            <li className="nav-item mx-1">
               <button className="btn btn-danger" onClick={logoutUser}>
                 Logout
               </button>
-            </>
-          ) : (
-            <>
-              <li>
-                <NavLink className="btn btn-success" to="/login">
-                  Login{" "}
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="btn btn-success" to="/signup">
-                  {" "}
-                  Signup{" "}
-                </NavLink>
-              </li>
-            </>
-          )}
-        </ul>
-      </div>
+            </li>
+          </>
+        ) : (
+          <>
+            <li className="nav-item mx-2">
+              <NavLink className="btn btn-success" to="/login">
+                Login{" "}
+              </NavLink>
+            </li>
+            <li className="nav-item mx-2">
+              <NavLink className="btn btn-success" to="/signup">
+                {" "}
+                Signup
+              </NavLink>
+            </li>
+          </>
+        )}
+      </ul>
     </nav>
   );
 };

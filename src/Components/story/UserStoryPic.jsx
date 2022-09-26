@@ -9,7 +9,7 @@ const UserStoryPic = ({ user }) => {
       state={{ userId: user.follower.id }}
     >
       <img src={user.follower.image} alt="UserPic" />
-      {user.follower.username}
+      <span className="story-username">{user.follower.username}</span>
     </NavLink>
   );
 };

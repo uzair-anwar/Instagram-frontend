@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../StyleSheets/posts-style.css";
 import { useSelector } from "react-redux";
 import Home from "./Home";
+import { useDispatch } from "react-redux";
+import { getUserDetails } from "../app/features/user/userAction";
+import Login from "../Components/Account/Login";
 
 const Main = () => {
   const { userToken } = useSelector((state) => state.user);
-  return userToken ? <Home /> : <h1>Hy</h1>;
+  const dispatch = useDispatch();
+  // automatically authenticate user if token is found
+  useEffect(() => {
+    if (userToken) {
+      dispatch(getUserDetails());
+    }
+  }, [userToken, dispatch]);
+
+  return userToken ? <Home /> : <Login />;
 };
 
 export default Main;

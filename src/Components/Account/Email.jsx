@@ -5,8 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../../StyleSheets/account-style.css";
-import { userLogin } from "../../app/features/user/userAction";
-import { signedUp } from "../../app/features/user/userSlice";
+import { sendEmail } from "../../app/features/user/userAction";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,42 +21,32 @@ const notify = (message) => {
   });
 };
 
-const Login = () => {
+const Email = () => {
   const navigate = useNavigate();
 
-  const { userToken, error } = useSelector((state) => state.user);
+  const { emailStatus, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(signedUp());
-  }, []);
-
-  useEffect(() => {
-    if (userToken) {
-      notify("Loged in successfully");
+    if (emailStatus?.status == 200) {
+      notify(emailStatus?.message);
       navigate("/");
+    } else {
+      notify(emailStatus?.message);
     }
-  }, [navigate, userToken]);
+  }, [navigate, emailStatus]);
 
   const onSubmit = async (values) => {
-    const user = {
-      email: values.email,
-      password: values.password,
-    };
-    dispatch(userLogin(user));
+    dispatch(sendEmail({ email: values.email }));
   };
 
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
     },
 
     validationSchema: Yup.object({
       email: Yup.string().required("Required").email("Invalid email address"),
-      password: Yup.string()
-        .min(6, "Password should be greater than 6 digit")
-        .required("Required"),
     }),
 
     onSubmit,
@@ -67,8 +56,9 @@ const Login = () => {
     <Container className="container">
       <Paper className="paper">
         <div className="header">
-          <h5>Create Account</h5>
+          <h5>Forget Password</h5>
         </div>
+
         <div>
           <form onSubmit={formik.handleSubmit} className="login-form">
             <Input
@@ -87,24 +77,8 @@ const Login = () => {
               <div className="error-msg">{formik.errors.email}</div>
             ) : null}
 
-            <Input
-              className="input"
-              placeholder="Enter Password"
-              id="password"
-              name="password"
-              type="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              label="Enter Password"
-            />
-
-            {formik.touched.password && formik.errors.password ? (
-              <div className="error-msg">{formik.errors.password}</div>
-            ) : null}
-
             <Button className="button" type="submit">
-              Log in
+              Send Email
             </Button>
 
             {error !== null ? <div className="error-msg">{error}</div> : null}
@@ -113,20 +87,10 @@ const Login = () => {
 
         <div className="login-link">
           <p className="text">
-            If you have no account, Click here{" "}
+            If you remember your password, Click here{" "}
             <span>
-              <NavLink className="link" to="/signup">
-                Sign Up
-              </NavLink>
-            </span>
-          </p>
-        </div>
-        <div className="login-link">
-          <p className="text">
-            If you forget your password, Click here{" "}
-            <span>
-              <NavLink className="link" to="/sendEmail">
-                Forget Password
+              <NavLink className="link" to="/login">
+                Log in
               </NavLink>
             </span>
           </p>
@@ -136,4 +100,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Email;

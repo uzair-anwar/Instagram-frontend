@@ -3,19 +3,23 @@ import { NavLink } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import CommentForm from "./CommentForm";
+
 import {
   deletePost,
   doLike,
   getAllLikes,
   getAllPost,
 } from "../../app/features/post/postAction";
+
 import {
   createNewComment,
   getPostComment,
 } from "../../app/features/comment/commentAction";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { makeStyles } from "@material-ui/core/styles";
 import "../../StyleSheets/navbar-style.css";
+
 import {
   Card,
   CardHeader,
@@ -26,20 +30,24 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
+
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import CommentIcon from "@material-ui/icons/Comment";
+
 import SwiperCore, {
   Keyboard,
   Scrollbar,
   Pagination,
   Navigation,
 } from "swiper/core";
+
 import "swiper/swiper.min.css";
 import "swiper/components/pagination/pagination.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/scrollbar/scrollbar.min.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { deleteSinglePost } from "../../app/features/post/postSlice";
 toast.configure();
 
 const notify = (message) => {
@@ -81,8 +89,9 @@ const PostCard = ({ post }) => {
   const { deleteResult, deleteSuccess, allLikes, likeSuccess } = useSelector(
     (state) => state.post
   );
-  const { editSuccess, postComment } = useSelector((state) => state.comment);
-  const [images, setImages] = useState([...post.url]);
+  const { commentSuccess, deletedSuccess, editSuccess, postComment } =
+    useSelector((state) => state.comment);
+  const [images, setImages] = useState(post.images);
   const [commentSection, setCommentSection] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [commentError, setCommentError] = useState(null);
@@ -104,8 +113,9 @@ const PostCard = ({ post }) => {
   }, [likeSuccess, dispatch]);
 
   useEffect(() => {
-    if (editSuccess) dispatch(getPostComment({ postId: post.id }));
-  }, [editSuccess]);
+    if (editSuccess || deletedSuccess || commentSuccess)
+      dispatch(getPostComment({ postId: post.id }));
+  }, [editSuccess, commentSuccess, deletedSuccess]);
 
   const submitLike = () => {
     dispatch(doLike(post.id));
@@ -122,19 +132,24 @@ const PostCard = ({ post }) => {
   const handledDeletePost = () => {
     dispatch(deletePost(post.id)).then(() => {
       notify(deleteResult?.message);
+      dispatch(deleteSinglePost({ id: post.id }));
     });
   };
 
-  const handleCommentSection = () => {
-    setCommentSection(true);
+  const handleCommentSection = (check) => {
+    if (commentSection == false) {
+      setCommentSection(true);
+    } else {
+      setCommentSection(false);
+    }
     dispatch(getPostComment({ postId: post.id }));
   };
 
   const handleComment = () => {
     if (checkComment()) {
       dispatch(createNewComment({ postId: post.id, body: commentText }));
-      setCommentSection("");
-      dispatch(getPostComment({ postId: post.id }));
+      setCommentText("");
+      setCommentError(null);
     }
   };
 
@@ -142,9 +157,9 @@ const PostCard = ({ post }) => {
     <div className="home-card">
       <Card>
         <CardHeader
-          avatar={<Avatar src={post.userPic} />}
-          title={post.name}
-          subheader={post.date}
+          avatar={<Avatar src={post?.user?.image} />}
+          title={post?.user?.name}
+          subheader={post?.createdAt}
           action={
             <Dropdown>
               <Dropdown.Toggle
@@ -178,9 +193,9 @@ const PostCard = ({ post }) => {
           loop
           className={swiperContainer}
         >
-          {images?.map((url, index) => (
+          {images?.map((element, index) => (
             <SwiperSlide key={index}>
-              <CardMedia className={media} image={url} />
+              <CardMedia className={media} image={element.url} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -206,10 +221,10 @@ const PostCard = ({ post }) => {
         </CardContent>
         {commentSection ? (
           <>
-            {postComment?.map((comment) => (
-              <>
+            {postComment?.map((comment, index) => (
+              <div key={index}>
                 <CommentForm comment={comment} />
-              </>
+              </div>
             ))}
             <div>
               <textarea

@@ -10,9 +10,9 @@ const CreateStory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (success) navigate("/");
-  // }, [success]);
+  useEffect(() => {
+    if (success) navigate("/");
+  }, [success]);
 
   const uploadStory = () => {
     const formData = new FormData();
@@ -21,7 +21,7 @@ const CreateStory = () => {
   };
 
   return (
-    <div className="container input-filed">
+    <div className="container input-filed my-5">
       <div className="form-group">
         <input
           type="file"
@@ -29,8 +29,8 @@ const CreateStory = () => {
           onChange={(e) => setImage(e.target.files[0])}
         />
       </div>
-      <button className="btn btn-primary" onClick={uploadStory}>
-        Submit post
+      <button className="btn btn-primary my-2" onClick={uploadStory}>
+        Create Story
       </button>
     </div>
   );

@@ -32,6 +32,9 @@ const postSlice = createSlice({
       state.posts = null;
       state.error = null;
     },
+    deleteSinglePost: (state, action) => {
+      state.posts = state.posts.filter((post) => post.id !== action.payload);
+    },
   },
   extraReducers: {
     //create Post
@@ -59,6 +62,7 @@ const postSlice = createSlice({
       if (payload.status == 200) {
         state.deleteSuccess = true;
       }
+
       state.deleteResult = payload;
     },
     [deletePost.rejected]: (state, { payload }) => {
@@ -70,7 +74,9 @@ const postSlice = createSlice({
     [getAllPost.fulfilled]: (state, { payload }) => {
       state.editSuccess = false;
       state.deleteSuccess = false;
+      state.deleteResult = null;
       state.posts = payload;
+      state.success = false;
     },
     [getAllPost.rejected]: (state, { payload }) => {
       state.error = payload;
@@ -105,5 +111,5 @@ const postSlice = createSlice({
   },
 });
 
-export const { removePost } = postSlice.actions;
+export const { removePost, deleteSinglePost } = postSlice.actions;
 export default postSlice.reducer;

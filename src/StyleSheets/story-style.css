@@ -1,7 +1,8 @@
 .img-list {
   margin-bottom: 20px;
   height: 150px;
-  width: 100%;
+  width: 50%;
+  margin-left: 25%;
   overflow: auto; /*Show horizontal scroll*/
 }
 .img-container {
@@ -10,8 +11,6 @@
   width: 100%;
   flex-direction: row;
   position: relative;
-  padding-left: 25%;
-  padding-right: 25%;
   white-space: nowrap; /*Added this*/
 }
 
@@ -21,6 +20,7 @@
   vertical-align: top; /*to remove unwanted whitespace */
   position: relative;
   border-radius: 50%;
+  border: 2px solid rgb(126, 40, 40);
 }
 
 .image {
@@ -28,6 +28,11 @@
   text-decoration: none;
   display: flex;
   flex-direction: column;
+  padding-left: 10px;
+}
+
+.story-username {
+  padding-left: 30%;
 }
 
 @media (max-width: 600px) {

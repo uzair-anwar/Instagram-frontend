@@ -23,7 +23,7 @@ const SearchField = (props) => {
         id="search-bar"
         type="text"
         className="form-control"
-        placeholder="Search"
+        placeholder="Search user"
         ref={inputRef}
         onChange={onInputChange}
       />

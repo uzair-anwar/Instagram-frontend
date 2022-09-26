@@ -4,9 +4,25 @@ a {
   color: black !important;
 }
 
-.brand-logo {
+.insta-logo {
   font-family: "Grand Hotel", cursive;
+  position: absolute;
+  color: #fff;
+  display: inline-block;
+  font-size: 2.1rem;
+  text-decoration: none;
+  padding-left: 5%;
 }
+
+.navbar-nav {
+  margin-right: auto;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+/* .search-field {
+  padding-right: 100px;
+} */
 
 .gallery {
   display: flex;
@@ -33,4 +49,41 @@ a {
   max-width: 500px;
   padding: 20px;
   text-align: "center";
+}
+
+.profile-info {
+  max-width: 50%;
+  margin: 0px auto;
+}
+
+.upper-info {
+  margin: 5%;
+  border-bottom: 1px solid grey;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-around;
+}
+
+.user-pic {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+}
+
+.post-info {
+  display: flex;
+  justify-content: space-between;
+  width: 108%;
+}
+
+.post-request-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.buttons-section {
+  display: flex;
+  flex-direction: row;
 }
