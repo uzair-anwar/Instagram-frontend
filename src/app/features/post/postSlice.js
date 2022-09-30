@@ -34,6 +34,10 @@ const postSlice = createSlice({
     },
     deleteSinglePost: (state, action) => {
       state.posts = state.posts.filter((post) => post.id !== action.payload);
+      state.deleteResult = null;
+    },
+    removeEdit: (state) => {
+      state.edit = null;
     },
   },
   extraReducers: {
@@ -43,7 +47,7 @@ const postSlice = createSlice({
       state.error = null;
     },
     [createNewPost.fulfilled]: (state, { payload }) => {
-      if (payload.status == 201) {
+      if (payload.status === 201) {
         state.loading = false;
         state.success = true;
       }
@@ -59,7 +63,7 @@ const postSlice = createSlice({
       state.deleteSuccess = false;
     },
     [deletePost.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.deleteSuccess = true;
       }
 
@@ -99,10 +103,10 @@ const postSlice = createSlice({
     },
     [getAllLikes.rejected]: (state, { payload }) => {},
 
-    // get All likes of a post
+    // edited a post
     [editPost.pending]: (state) => {},
     [editPost.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.editSuccess = true;
       }
       state.edit = payload;
@@ -111,5 +115,5 @@ const postSlice = createSlice({
   },
 });
 
-export const { removePost, deleteSinglePost } = postSlice.actions;
+export const { removePost, deleteSinglePost, removeEdit } = postSlice.actions;
 export default postSlice.reducer;

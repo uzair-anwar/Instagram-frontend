@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, Paper, Input } from "@material-ui/core";
-import { Checkbox, Switch } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -152,6 +151,7 @@ const EditProfile = () => {
             </span>
           </p>
         </div>
+
         <div className="login-link">
           <p className="text">
             If you want to update password{" "}

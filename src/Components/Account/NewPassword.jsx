@@ -25,8 +25,7 @@ const NewPassword = (props) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const email = searchParams.get("email");
-  console.log(email);
-  const { newPasswordStatus, newPasswordSuccess, updatePasswordStatus, error } =
+  const { newPasswordStatus, newPasswordSuccess, updatePasswordStatus } =
     useSelector((state) => state.user);
   const dispatch = useDispatch();
 

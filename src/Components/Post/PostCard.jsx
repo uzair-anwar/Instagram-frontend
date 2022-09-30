@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import CommentForm from "./CommentForm";
+import { format } from "timeago.js";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import CommentIcon from "@material-ui/icons/Comment";
+import { deleteSinglePost } from "../../app/features/post/postSlice";
+import Comment from "./Comment";
+import ImageSwiper from "./ImageSwiper";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   deletePost,
@@ -10,44 +17,17 @@ import {
   getAllLikes,
   getAllPost,
 } from "../../app/features/post/postAction";
-
-import {
-  createNewComment,
-  getPostComment,
-} from "../../app/features/comment/commentAction";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import { makeStyles } from "@material-ui/core/styles";
+import { getPostComment } from "../../app/features/comment/commentAction";
 import "../../StyleSheets/navbar-style.css";
-
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   CardActions,
   Avatar,
   IconButton,
   Typography,
 } from "@material-ui/core";
-
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import CommentIcon from "@material-ui/icons/Comment";
-
-import SwiperCore, {
-  Keyboard,
-  Scrollbar,
-  Pagination,
-  Navigation,
-} from "swiper/core";
-
-import "swiper/swiper.min.css";
-import "swiper/components/pagination/pagination.min.css";
-import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { deleteSinglePost } from "../../app/features/post/postSlice";
 toast.configure();
 
 const notify = (message) => {
@@ -64,38 +44,20 @@ const notify = (message) => {
   }
 };
 
-const useStyles = makeStyles({
-  media: {
-    height: "50%",
-    paddingTop: "100%",
-  },
-  swiperContainer: {
-    paddingBottom: "3rem",
-    "& .swiper-pagination-bullet": {
-      background: "blue",
-    },
-    "& .swiper-button-next:after": {
-      fontSize: "2rem !important",
-    },
-    "& .swiper-button-prev:after": {
-      fontSize: "2rem !important",
-    },
-  },
-});
-
-SwiperCore.use([Keyboard, Scrollbar, Pagination, Navigation]);
-
 const PostCard = ({ post }) => {
-  const { deleteResult, deleteSuccess, allLikes, likeSuccess } = useSelector(
+  const { deleteSuccess, allLikes, likeSuccess } = useSelector(
     (state) => state.post
   );
-  const { commentSuccess, deletedSuccess, editSuccess, postComment } =
-    useSelector((state) => state.comment);
+  const {
+    commentSuccess,
+    deletedSuccess,
+    editSuccess,
+    postComment,
+    editComment,
+  } = useSelector((state) => state.comment);
+
   const [images, setImages] = useState(post.images);
   const [commentSection, setCommentSection] = useState(false);
-  const [commentText, setCommentText] = useState("");
-  const [commentError, setCommentError] = useState(null);
-  const { media, swiperContainer } = useStyles();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -107,50 +69,31 @@ const PostCard = ({ post }) => {
   }, [deleteSuccess, dispatch]);
 
   useEffect(() => {
+    notify(editComment?.message);
+  }, [editComment]);
+
+  useEffect(() => {
     if (likeSuccess) {
       dispatch(getAllLikes());
     }
   }, [likeSuccess, dispatch]);
 
-  useEffect(() => {
-    if (editSuccess || deletedSuccess || commentSuccess)
-      dispatch(getPostComment({ postId: post.id }));
-  }, [editSuccess, commentSuccess, deletedSuccess]);
-
   const submitLike = () => {
     dispatch(doLike(post.id));
   };
 
-  const checkComment = () => {
-    if (commentText.length === 0) {
-      setCommentError("Comment is required");
-      return false;
-    }
-    return true;
-  };
-
   const handledDeletePost = () => {
-    dispatch(deletePost(post.id)).then(() => {
-      notify(deleteResult?.message);
-      dispatch(deleteSinglePost({ id: post.id }));
-    });
+    dispatch(deletePost(post.id));
+    dispatch(deleteSinglePost({ id: post.id }));
   };
 
   const handleCommentSection = (check) => {
-    if (commentSection == false) {
+    if (commentSection === false) {
       setCommentSection(true);
     } else {
       setCommentSection(false);
     }
     dispatch(getPostComment({ postId: post.id }));
-  };
-
-  const handleComment = () => {
-    if (checkComment()) {
-      dispatch(createNewComment({ postId: post.id, body: commentText }));
-      setCommentText("");
-      setCommentError(null);
-    }
   };
 
   return (
@@ -159,7 +102,7 @@ const PostCard = ({ post }) => {
         <CardHeader
           avatar={<Avatar src={post?.user?.image} />}
           title={post?.user?.name}
-          subheader={post?.createdAt}
+          subheader={format(post?.createdAt)}
           action={
             <Dropdown>
               <Dropdown.Toggle
@@ -170,6 +113,7 @@ const PostCard = ({ post }) => {
               <Dropdown.Menu>
                 <Dropdown.Item>
                   <NavLink
+                    className="text-decoration-none"
                     to={"/Post/" + post.id + "/edit"}
                     state={{ post: post }}
                   >
@@ -185,20 +129,8 @@ const PostCard = ({ post }) => {
           }
         />
 
-        <Swiper
-          grabCursor
-          keyboard={{ enabled: true }}
-          pagination={{ clickable: true }}
-          navigation
-          loop
-          className={swiperContainer}
-        >
-          {images?.map((element, index) => (
-            <SwiperSlide key={index}>
-              <CardMedia className={media} image={element.url} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <ImageSwiper images={images} />
+
         <CardActions disableSpacing>
           <span onClick={submitLike}>
             <IconButton>
@@ -215,31 +147,14 @@ const PostCard = ({ post }) => {
         </CardActions>
 
         <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography gutterBottom variant="h6" component="div">
+            Caption
+          </Typography>
+          <Typography variant="body1" color="textPrimary" component="p">
             {post.caption}
           </Typography>
         </CardContent>
-        {commentSection ? (
-          <>
-            {postComment?.map((comment, index) => (
-              <div key={index}>
-                <CommentForm comment={comment} />
-              </div>
-            ))}
-            <div>
-              <textarea
-                placeholder="Comment here"
-                onChange={(e) => setCommentText(e.target.value)}
-              />
-              <button className="btn btn-primary" onClick={handleComment}>
-                Comment
-              </button>
-              {commentError ? (
-                <div className="error-msg">{commentError}</div>
-              ) : null}
-            </div>
-          </>
-        ) : null}
+        {commentSection ? <Comment post={post} /> : null}
       </Card>
     </div>
   );

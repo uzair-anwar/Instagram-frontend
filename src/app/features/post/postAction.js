@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
 export const createNewPost = createAsyncThunk(
   // action type string
   "post/create",
@@ -118,6 +119,7 @@ export const getAllPost = createAsyncThunk(
     }
   }
 );
+
 export const doLike = createAsyncThunk(
   "post/doLike",
   async (postId, { getState, rejectWithValue }) => {

@@ -31,7 +31,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loading == true) {
+    if (loading === true) {
       notify("Account creation is in process, please wait");
     }
   }, [loading]);
@@ -47,7 +47,7 @@ const Signup = () => {
       );
       navigate("/profile");
     }
-  }, [userToken, success]);
+  }, [userToken, success, navigate]);
 
   const onSubmit = async (values) => {
     // eslint-disable-next-line no-restricted-globals

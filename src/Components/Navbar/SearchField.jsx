@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { TextField } from "@material-ui/core";
 
 const SearchField = (props) => {
   const { options, onInputChange, onClickInput } = props;
@@ -9,24 +10,24 @@ const SearchField = (props) => {
   useEffect(() => {
     inputRef.current.addEventListener("click", (event) => {
       event.stopPropagation();
-      ulRef.current.style.display = "flex";
+      if (ulRef != null) ulRef.current.style.display = "flex";
       onInputChange(event);
     });
     document.addEventListener("click", (event) => {
-      ulRef.current.style.display = "none";
+      if (ulRef != null) ulRef.current.style.display = "none";
     });
   }, []);
 
   return (
     <div className="search-bar-dropdown">
-      <input
+      <TextField
         id="search-bar"
         type="text"
-        className="form-control"
         placeholder="Search user"
         ref={inputRef}
         onChange={onInputChange}
       />
+
       <ul id="results" className="list-group" ref={ulRef}>
         {options?.map((option, index) => {
           return (

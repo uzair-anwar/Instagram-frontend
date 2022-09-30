@@ -32,7 +32,7 @@ const commentSlice = createSlice({
     // get All likes of a post
     [createNewComment.pending]: (state) => {},
     [createNewComment.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.commentSuccess = true;
       }
       state.comment = payload;
@@ -41,28 +41,27 @@ const commentSlice = createSlice({
     // get Post Comment
     [getPostComment.pending]: (state) => {},
     [getPostComment.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.commentSuccess = true;
-        state.editSuccess = false;
       }
       state.postComment = payload;
     },
     [getPostComment.rejected]: (state, { payload }) => {},
 
-    // get Post Comment
+    // Edit a Comment
     [editComment.pending]: (state) => {},
     [editComment.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.editSuccess = true;
       }
       state.editComment = payload;
     },
     [editComment.rejected]: (state, { payload }) => {},
 
-    // get Post Comment
+    // Delete a Comment
     [deleteComment.pending]: (state) => {},
     [deleteComment.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.deleteSucess = true;
       }
       state.deletedComment = payload;

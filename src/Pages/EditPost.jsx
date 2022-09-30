@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { TextField } from "@material-ui/core";
 import "../StyleSheets/navbar-style.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editPost } from "../app/features/post/postAction";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ImageSwiper from "../Components/Post/ImageSwiper";
 toast.configure();
 
 const notify = (message) => {
@@ -28,7 +30,8 @@ const EditPost = () => {
   const post = location.state.post;
   const id = post.id;
   const [caption, setCaption] = useState(post.caption);
-  const [displayImages, setDisplayImages] = useState(post.images);
+  const [images, setImages] = useState(post.images);
+
   const { edit, editSuccess } = useSelector((state) => state.post);
   const [error, setError] = useState(null);
 
@@ -37,6 +40,10 @@ const EditPost = () => {
       navigate("/");
     }
   }, [editSuccess, navigate]);
+
+  useEffect(() => {
+    notify(edit?.message);
+  }, [edit]);
 
   const checkCaption = () => {
     if (caption.length === 0) {
@@ -53,34 +60,27 @@ const EditPost = () => {
   };
 
   return (
-    <div className="card input-filed create-post">
-      <input
-        type="text"
-        placeholder="Caption"
+    <div className="d-flex flex-column justify-content-center w-50   m-auto">
+      <TextField
+        id="outlined-basic"
+        variant="outlined"
+        label="Caption"
         value={caption}
+        className="w-100 my-2 pt-1"
         onChange={(e) => setCaption(e.target.value)}
+        onClick={() => setError(null)}
       />
-
-      <div className="row">
-        {displayImages.map((image, index) => (
-          <div key={index}>
-            <img
-              src={image.url}
-              alt="..."
-              className="img-responsive inline-block"
-            />
-          </div>
-        ))}
-      </div>
-
-      <br />
-
-      <button className="btn btn-primary" onClick={handleEditPost}>
-        Edit post
-      </button>
-      {edit !== null ? <div className="error-msg">{edit.message}</div> : null}
-
       {error ? <div className="error-msg">{error}</div> : null}
+
+      <div className="h-25">
+        <ImageSwiper images={images} />
+      </div>
+      <br />
+      <div className="flex m-auto">
+        <button className="btn btn-primary" onClick={handleEditPost}>
+          Edit post
+        </button>
+      </div>
     </div>
   );
 };

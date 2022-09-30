@@ -20,10 +20,6 @@ a {
   justify-content: flex-end;
 }
 
-/* .search-field {
-  padding-right: 100px;
-} */
-
 .gallery {
   display: flex;
   flex-wrap: wrap;
@@ -86,4 +82,13 @@ a {
 .buttons-section {
   display: flex;
   flex-direction: row;
+}
+
+.profile-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.comment-section {
+  max-height: 250px;
+  overflow-y: auto;
 }

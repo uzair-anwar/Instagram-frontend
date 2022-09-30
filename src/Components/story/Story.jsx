@@ -7,7 +7,6 @@ import { removeStory } from "../../app/features/story/storySlice";
 
 const Story = () => {
   const { story } = useSelector((state) => state.story);
-  const [storyFlag, setStoryFlag] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,15 +16,17 @@ const Story = () => {
 
   useEffect(() => {
     dispatch(getUserStories({ userId }));
+  }, []);
+
+  useEffect(() => {
     if (story !== null) {
       for (const element of story) {
         setUrls((arr) => [...arr, element.url]);
       }
     }
-  }, []);
+  }, [story]);
 
   const handleStoryFlag = () => {
-    dispatch(removeStory());
     navigate("/");
   };
 
@@ -38,7 +39,7 @@ const Story = () => {
       onAllStoriesEnd={handleStoryFlag}
     />
   ) : (
-    <h1>You have no stories</h1>
+    <h1 className="container-fluid m-auto ">You have no stories</h1>
   );
 };
 

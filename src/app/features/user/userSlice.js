@@ -16,6 +16,7 @@ import {
   acceptRequest,
   sendEmail,
   addNewPassword,
+  getRequestStatus,
 } from "./userAction";
 
 const userToken = localStorage.getItem("userToken")
@@ -32,12 +33,13 @@ const initialState = {
   searchedUsers: null,
   searchedUserDetails: null,
   searchSuccess: false,
-  followSuccess: false,
+  followSuccess: null,
   followings: null,
   updateSuccess: false,
   updateInfo: null,
   followStatus: null,
   requestStatus: null,
+  singleRequestStatus: null,
   requests: null,
   rejectStatus: null,
   acceptStatus: null,
@@ -70,6 +72,9 @@ const userSlice = createSlice({
         (request) => request.id !== action.payload
       );
     },
+    removeRequest: (state, action) => {
+      state.requestStatus = null;
+    },
   },
   extraReducers: {
     //login user
@@ -93,7 +98,7 @@ const userSlice = createSlice({
       state.error = null;
     },
     [registerUser.fulfilled]: (state, { payload }) => {
-      if (payload.status == 201) {
+      if (payload.status === 201) {
         state.success = true; // registration successful
         state.userToken = payload.userToken;
       }
@@ -120,7 +125,7 @@ const userSlice = createSlice({
       state.loading = false;
     },
 
-    // search User
+    // search All User
     [searchUsers.pending]: (state) => {
       state.loading = true;
     },
@@ -133,7 +138,7 @@ const userSlice = createSlice({
       state.loading = false;
     },
 
-    // search User
+    // search clicked User
     [getSearchedUserDetails.pending]: (state) => {
       state.loading = true;
     },
@@ -151,7 +156,7 @@ const userSlice = createSlice({
     },
     [setFollow.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.followSuccess = true;
+      state.followSuccess = payload;
     },
     [setFollow.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -169,7 +174,7 @@ const userSlice = createSlice({
       state.loading = false;
     },
 
-    //get following
+    //get follow status
     [getFollowStatus.pending]: (state) => {
       state.loading = true;
     },
@@ -181,12 +186,24 @@ const userSlice = createSlice({
       state.loading = false;
     },
 
+    //get request status
+    [getRequestStatus.pending]: (state) => {
+      state.loading = true;
+    },
+    [getRequestStatus.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.singleRequestStatus = payload;
+    },
+    [getRequestStatus.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+
     //Update User
     [updateUser.pending]: (state) => {
       state.loading = true;
     },
     [updateUser.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.updateSuccess = true;
       }
       state.updateInfo = payload;
@@ -200,7 +217,7 @@ const userSlice = createSlice({
       state.loading = true;
     },
     [updatePassword.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.updatePasswordSuccess = true;
       }
       state.updatePasswordStatus = payload;
@@ -225,7 +242,7 @@ const userSlice = createSlice({
       state.loading = true;
     },
     [addNewPassword.fulfilled]: (state, { payload }) => {
-      if (payload.status == 200) {
+      if (payload.status === 200) {
         state.newPasswordSuccess = true;
       }
       state.newPasswordStatus = payload;
@@ -240,7 +257,7 @@ const userSlice = createSlice({
     },
     [sendRequest.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.requestStatus = true;
+      state.requestStatus = payload;
     },
     [sendRequest.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -284,5 +301,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { signedUp, logout, edited, deleteRequest } = userSlice.actions;
+export const { signedUp, logout, edited, deleteRequest, removeRequest } =
+  userSlice.actions;
 export default userSlice.reducer;

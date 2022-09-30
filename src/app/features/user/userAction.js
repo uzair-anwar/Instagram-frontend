@@ -285,7 +285,6 @@ export const addNewPassword = createAsyncThunk(
   // callback function
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      console.log(email);
       // make request to backend
       const { data } = await axios({
         method: "post",
@@ -308,7 +307,7 @@ export const addNewPassword = createAsyncThunk(
 );
 
 export const getFollowStatus = createAsyncThunk(
-  "user/getFolloStatus",
+  "user/getFollowStatus",
   async ({ searchedId }, { getState, rejectWithValue }) => {
     try {
       // get user data from store
@@ -322,6 +321,34 @@ export const getFollowStatus = createAsyncThunk(
       };
       const { data } = await axios.get(
         `${process.env.REACT_APP_SERVER_API}/auth/getFollowStatus/${searchedId}`,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const getRequestStatus = createAsyncThunk(
+  "user/getRequestStatus",
+  async ({ searchedId }, { getState, rejectWithValue }) => {
+    try {
+      // get user data from store
+      const { user } = getState();
+
+      // configure authorization header with user's token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVER_API}/auth/getSingleRequest/${searchedId}`,
         config
       );
       return data;

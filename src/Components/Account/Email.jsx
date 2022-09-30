@@ -28,7 +28,7 @@ const Email = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (emailStatus?.status == 200) {
+    if (emailStatus?.status === 200) {
       notify(emailStatus?.message);
       navigate("/");
     } else {

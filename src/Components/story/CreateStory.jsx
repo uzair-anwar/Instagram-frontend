@@ -12,7 +12,7 @@ const CreateStory = () => {
 
   useEffect(() => {
     if (success) navigate("/");
-  }, [success]);
+  }, [success, navigate]);
 
   const uploadStory = () => {
     const formData = new FormData();

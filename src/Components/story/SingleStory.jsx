@@ -15,6 +15,7 @@ const SingleStory = ({ story }) => {
     <div className="container-fluid">
       <img src={story.url} alt="Story Pic" />
       <p className="mt-2">For deleting Story, Press</p>
+
       <button className="btn btn-outline-danger mb-3" onClick={handleDelete}>
         Delete
       </button>
