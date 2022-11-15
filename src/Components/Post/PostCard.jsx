@@ -9,14 +9,8 @@ import { deleteSinglePost } from "../../app/features/post/postSlice";
 import Comment from "./Comment";
 import ImageSwiper from "./ImageSwiper";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-import {
-  deletePost,
-  doLike,
-  getAllLikes,
-  getAllPost,
-} from "../../app/features/post/postAction";
+import { deletePost, doLike } from "../../app/features/post/postAction";
 import { getPostComment } from "../../app/features/comment/commentAction";
 import "../../StyleSheets/navbar-style.css";
 import {
@@ -28,55 +22,33 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
-toast.configure();
-
-const notify = (message) => {
-  if (message !== undefined) {
-    toast.error(message, {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  }
-};
 
 const PostCard = ({ post }) => {
-  const { deleteSuccess, allLikes, likeSuccess } = useSelector(
+  const { deleteSuccess, deleteResult, likes } = useSelector(
     (state) => state.post
   );
-  const {
-    commentSuccess,
-    deletedSuccess,
-    editSuccess,
-    postComment,
-    editComment,
-  } = useSelector((state) => state.comment);
+  const { editComment } = useSelector((state) => state.comment);
 
-  const [images, setImages] = useState(post.images);
+  const [images] = useState(post.images);
+  const [likeCount, setLikeCount] = useState(post?.likes?.length);
   const [commentSection, setCommentSection] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllLikes());
-  }, []);
+    if (deleteSuccess && deleteResult != null)
+      toast.error(deleteResult?.message);
+  }, [deleteSuccess, deleteResult, dispatch]);
 
   useEffect(() => {
-    if (deleteSuccess) dispatch(getAllPost());
-  }, [deleteSuccess, dispatch]);
-
-  useEffect(() => {
-    notify(editComment?.message);
+    if (editComment != null) toast.error(editComment?.message);
   }, [editComment]);
 
   useEffect(() => {
-    if (likeSuccess) {
-      dispatch(getAllLikes());
+    if (likes != null) {
+      if (likes?.status == 201) setLikeCount((prev) => prev + 1);
+      else if (likes?.status == 202) setLikeCount((prev) => prev - 1);
     }
-  }, [likeSuccess, dispatch]);
+  }, [likes]);
 
   const submitLike = () => {
     dispatch(doLike(post.id));
@@ -89,11 +61,11 @@ const PostCard = ({ post }) => {
 
   const handleCommentSection = (check) => {
     if (commentSection === false) {
+      dispatch(getPostComment({ postId: post.id }));
       setCommentSection(true);
     } else {
       setCommentSection(false);
     }
-    dispatch(getPostComment({ postId: post.id }));
   };
 
   return (
@@ -138,7 +110,7 @@ const PostCard = ({ post }) => {
             </IconButton>
           </span>
 
-          {allLikes?.[post?.id]}
+          {likeCount}
           <span onClick={handleCommentSection}>
             <IconButton>
               <CommentIcon />

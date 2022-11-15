@@ -41,8 +41,10 @@ export const userLogin = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      // store user's token in local storage
-      localStorage.setItem("userToken", data.userToken);
+      if (data.status === 200) {
+        // store user's token in local storage
+        localStorage.setItem("userToken", data.userToken);
+      }
       return data;
     } catch (error) {
       // return custom error message from API if any
@@ -263,6 +265,33 @@ export const sendEmail = createAsyncThunk(
         method: "post",
         url: `${process.env.REACT_APP_SERVER_API}/auth/sendEmail`,
         data: { email },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return data;
+    } catch (error) {
+      // return custom error message from API if any
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const compareCode = createAsyncThunk(
+  // action type string
+  "user/compareCode",
+  // callback function
+  async ({ code, email }, { rejectWithValue }) => {
+    try {
+      // make request to backend
+      const { data } = await axios({
+        method: "post",
+        url: `${process.env.REACT_APP_SERVER_API}/auth/compareCode`,
+        data: { code, email },
         headers: {
           "Content-Type": "application/json",
         },

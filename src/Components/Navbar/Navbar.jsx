@@ -55,7 +55,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-expand-sm  navbar-light bg-white justify-content-between">
+    <nav className="navbar navbar-expand-lg navbar-expand-sm  navbar-light bg-white justify-content-between mt-4">
       <NavLink to="/" className="navbar-brand insta-logo left">
         Instagram
       </NavLink>
@@ -97,25 +97,7 @@ const Navbar = () => {
               </li>
             </Tooltip>
           </>
-        ) : (
-          <>
-            <Tooltip title="Login">
-              <li className="nav-item mx-2">
-                <NavLink className="pt-2 ml-2" to="/login">
-                  <FiLogIn className="profile-icon" />
-                </NavLink>
-              </li>
-            </Tooltip>
-            <Tooltip title="SignUp">
-              <li className="nav-item mx-2">
-                <NavLink className="btn btn-success" to="/signup">
-                  {" "}
-                  Signup
-                </NavLink>
-              </li>
-            </Tooltip>
-          </>
-        )}
+        ) : null}
       </ul>
     </nav>
   );

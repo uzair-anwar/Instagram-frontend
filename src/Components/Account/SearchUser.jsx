@@ -11,19 +11,6 @@ import { removeRequest } from "../../app/features/user/userSlice";
 import PostCard from "../Post/PostCard";
 import "../../StyleSheets/navbar-style.css";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const notify = (message) => {
-  toast.info(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
 
 const SearchUser = () => {
   let {
@@ -62,7 +49,7 @@ const SearchUser = () => {
   }, []);
 
   useEffect(() => {
-    if (followStatus !== null && followStatus.status === 201) {
+    if (followStatus !== null && followStatus?.status === 201) {
       setFollowText("Unfollow");
     } else {
       setFollowText("follow");
@@ -70,11 +57,11 @@ const SearchUser = () => {
   }, [followStatus]);
 
   useEffect(() => {
-    notify(requestStatus?.message);
+    if (requestStatus != null) toast.info(requestStatus?.message);
   }, [requestStatus]);
 
   useEffect(() => {
-    notify(followSuccess?.message);
+    if (followSuccess != null) toast.info(followSuccess?.message);
   }, [followSuccess]);
 
   const handleFellow = () => {
@@ -131,7 +118,7 @@ const SearchUser = () => {
               </div>
               <div>
                 {searchedUserDetails?.isPrivate &&
-                followStatus.status !== 201 ? (
+                followStatus?.status !== 201 ? (
                   <>
                     <button
                       className="btn btn-outline-primary"

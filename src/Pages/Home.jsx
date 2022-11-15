@@ -1,58 +1,46 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPost } from "../app/features/post/postAction";
-import { getFollowings } from "../app/features/user/userAction";
 import PostCard from "../Components/Post/PostCard";
 import UserStoryPic from "../Components/story/UserStoryPic";
 import { removeStory } from "../app/features/story/storySlice";
 import { unSuccess } from "../app/features/story/storySlice";
 import { removeEdit } from "../app/features/post/postSlice";
 import { BsPlusCircle } from "react-icons/bs";
+import { removeCommentStatus } from "../app/features/comment/commentSlice";
 import "../StyleSheets/story-style.css";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-toast.configure();
-
-const notify = (message) => {
-  if (message !== undefined) {
-    toast.error(message, {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  }
-};
+import { getAllPost } from "../app/features/post/postAction";
+import { getFollowings } from "../app/features/user/userAction";
 
 const Home = () => {
-  const { deleteResult, posts, deleteSuccess, editSuccess } = useSelector(
+  const { edit, deleteResult, posts, deleteSuccess, editSuccess } = useSelector(
     (state) => state.post
   );
   const { userInfo, followings } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  dispatch(removeStory());
+  // dispatch(removeStory());
 
   useEffect(() => {
-    dispatch(getFollowings());
+    // dispatch(getAllPost());
+    // dispatch(getFollowings());
     dispatch(unSuccess());
-    dispatch(removeEdit());
+    dispatch(removeCommentStatus());
   }, []);
 
   useEffect(() => {
-    notify(deleteResult?.message);
-  }, [deleteResult]);
+    if (editSuccess && edit != null) {
+      toast.success(edit?.message);
+      dispatch(removeEdit());
+    }
+  }, [editSuccess]);
 
   useEffect(() => {
-    if (posts === null || deleteSuccess || editSuccess) {
-      dispatch(getAllPost());
-    }
-  }, [posts, dispatch, deleteSuccess, editSuccess]);
+    if (deleteSuccess && deleteResult != null)
+      toast.info(deleteResult?.message);
+    dispatch(removeEdit());
+  }, [deleteResult]);
 
   const handleStory = () => {
     navigate("/createStory");

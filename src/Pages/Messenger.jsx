@@ -21,7 +21,6 @@ const Messenger = () => {
   useEffect(() => {
     socket.current = io("ws://localhost:8901");
     socket.current.on("getMessage", (data) => {
-      console.log("H");
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,

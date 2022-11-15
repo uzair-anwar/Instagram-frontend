@@ -7,19 +7,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import "../../StyleSheets/account-style.css";
 import { registerUser } from "../../app/features/user/userAction";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const notify = (message) => {
-  toast.info(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
 
 const Signup = () => {
   const [image, setImage] = useState(null);
@@ -32,17 +19,17 @@ const Signup = () => {
 
   useEffect(() => {
     if (loading === true) {
-      notify("Account creation is in process, please wait");
+      toast.info("Account creation is in process, please wait");
     }
   }, [loading]);
 
   useEffect(() => {
     if (success) {
-      notify("Account created successfully");
+      toast.success("Account created successfully");
       navigate("/login");
     }
     if (userToken) {
-      notify(
+      toast.info(
         "You already have a account, Please logout first and then make a new one"
       );
       navigate("/profile");

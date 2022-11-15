@@ -7,19 +7,6 @@ import * as Yup from "yup";
 import "../../StyleSheets/account-style.css";
 import { updatePassword } from "../../app/features/user/userAction";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const notify = (message) => {
-  toast.success(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -31,7 +18,7 @@ const UpdatePassword = () => {
 
   useEffect(() => {
     if (updatePasswordSuccess) {
-      notify(updatePasswordStatus.message);
+      toast.success(updatePasswordStatus?.message);
       navigate("/");
     }
   }, [navigate, updatePasswordSuccess, updatePasswordStatus]);

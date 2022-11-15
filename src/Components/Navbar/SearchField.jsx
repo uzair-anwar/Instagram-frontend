@@ -14,7 +14,8 @@ const SearchField = (props) => {
       onInputChange(event);
     });
     document.addEventListener("click", (event) => {
-      if (ulRef != null) ulRef.current.style.display = "none";
+      if (ulRef != null)
+        if (ulRef?.current != null) ulRef.current.style.display = "none";
     });
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Button, Container, Paper } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -7,37 +7,27 @@ import * as Yup from "yup";
 import "../../StyleSheets/account-style.css";
 import { sendEmail } from "../../app/features/user/userAction";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const notify = (message) => {
-  toast.success(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
+import { setForgetEmail } from "../../app/features/user/userSlice";
 
 const Email = () => {
   const navigate = useNavigate();
-
   const { emailStatus, error } = useSelector((state) => state.user);
+  const [email, setEmail] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (emailStatus?.status === 200) {
-      notify(emailStatus?.message);
-      navigate("/");
+      dispatch(setForgetEmail(email));
+      toast.success(emailStatus?.message);
+      navigate("/forgetPassword");
     } else {
-      notify(emailStatus?.message);
+      toast.success(emailStatus?.message);
     }
-  }, [navigate, emailStatus]);
+  }, [dispatch, navigate, emailStatus, email]);
 
   const onSubmit = async (values) => {
     dispatch(sendEmail({ email: values.email }));
+    setEmail(values.email);
   };
 
   const formik = useFormik({
@@ -46,9 +36,10 @@ const Email = () => {
     },
 
     validationSchema: Yup.object({
-      email: Yup.string().required("Required").email("Invalid email address"),
+      email: Yup.string()
+        .required("Email is Required")
+        .email("Invalid email address"),
     }),
-
     onSubmit,
   });
 
@@ -91,6 +82,14 @@ const Email = () => {
             <span>
               <NavLink className="link" to="/login">
                 Log in
+              </NavLink>
+            </span>
+          </p>
+          <p className="text">
+            If you already recieved token/code then click here{" "}
+            <span>
+              <NavLink className="link" to="/forgetPassword">
+                Code
               </NavLink>
             </span>
           </p>

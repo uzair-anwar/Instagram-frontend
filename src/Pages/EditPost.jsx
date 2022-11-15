@@ -5,23 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editPost } from "../app/features/post/postAction";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import ImageSwiper from "../Components/Post/ImageSwiper";
-toast.configure();
-
-const notify = (message) => {
-  if (message !== undefined) {
-    toast.error(message, {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  }
-};
 
 const EditPost = () => {
   const location = useLocation();
@@ -42,7 +26,7 @@ const EditPost = () => {
   }, [editSuccess, navigate]);
 
   useEffect(() => {
-    notify(edit?.message);
+    if (edit != null) toast.error(edit?.message);
   }, [edit]);
 
   const checkCaption = () => {

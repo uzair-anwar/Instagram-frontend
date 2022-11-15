@@ -15,6 +15,7 @@ import {
   rejectRequest,
   acceptRequest,
   sendEmail,
+  compareCode,
   addNewPassword,
   getRequestStatus,
 } from "./userAction";
@@ -23,11 +24,16 @@ const userToken = localStorage.getItem("userToken")
   ? localStorage.getItem("userToken")
   : null;
 
+const email = localStorage.getItem("email")
+  ? JSON.parse(localStorage.getItem("email"))
+  : null;
+
 const initialState = {
   loading: false,
   signedUpStatus: null,
   userInfo: null, // for user object {}
   userToken: userToken, // for storing the JWT
+  loginMessage: null,
   error: null,
   success: false, // for monitoring the registration process.
   searchedUsers: null,
@@ -46,6 +52,8 @@ const initialState = {
   updatePasswordSuccess: false,
   updatePasswordStatus: null,
   emailStatus: null,
+  email: email,
+  compareCodeStatus: null,
   newPasswordSuccess: false,
   newPasswordStatus: null,
 };
@@ -63,6 +71,7 @@ const userSlice = createSlice({
     },
     signedUp: (state) => {
       state.success = false;
+      state.signedUpStatus = null;
     },
     edited: (state) => {
       state.updateSuccess = false;
@@ -72,8 +81,16 @@ const userSlice = createSlice({
         (request) => request.id !== action.payload
       );
     },
-    removeRequest: (state, action) => {
+    removeRequest: (state) => {
       state.requestStatus = null;
+    },
+    setForgetEmail: (state, action) => {
+      state.email = action.payload;
+      localStorage.setItem("email", JSON.stringify(action.payload));
+    },
+    removeCompareCodeStatus: (state) => {
+      state.compareCodeStatus = null;
+      localStorage.removeItem("email");
     },
   },
   extraReducers: {
@@ -84,8 +101,11 @@ const userSlice = createSlice({
     },
     [userLogin.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.success = true; // registration successful
-      state.userToken = payload.userToken;
+      if (payload.status == 200) {
+        state.success = true; // registration successful
+        state.userToken = payload.userToken;
+      }
+      state.loginMessage = payload;
     },
     [userLogin.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -237,6 +257,17 @@ const userSlice = createSlice({
       state.loading = false;
     },
 
+    //compare code
+    [compareCode.pending]: (state) => {
+      state.loading = true;
+    },
+    [compareCode.fulfilled]: (state, { payload }) => {
+      state.compareCodeStatus = payload;
+    },
+    [compareCode.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+
     //Update user password
     [addNewPassword.pending]: (state) => {
       state.loading = true;
@@ -301,6 +332,13 @@ const userSlice = createSlice({
   },
 });
 
-export const { signedUp, logout, edited, deleteRequest, removeRequest } =
-  userSlice.actions;
+export const {
+  signedUp,
+  logout,
+  edited,
+  deleteRequest,
+  removeRequest,
+  setForgetEmail,
+  removeCompareCodeStatus,
+} = userSlice.actions;
 export default userSlice.reducer;

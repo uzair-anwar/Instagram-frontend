@@ -22,18 +22,29 @@ const commentSlice = createSlice({
   name: "comment",
   initialState,
   reducers: {
-    deletePostComment: (state, action) => {
-      state.postComment = state.postComment.filter(
-        (comment) => comment.id !== action.payload.id
-      );
+    editLocalComment: (state, payload) => {
+      state.postComment = state.postComment.map((object) => {
+        if (object.id === payload.id) {
+          return { ...object, body: payload.body };
+        }
+        return object;
+      });
+    },
+    removeDeleteStatus: (state) => {
+      state.deletedComment = null;
+    },
+    removeCommentStatus: (state) => {
+      state.commentSuccess = false;
+      state.editComment = null;
     },
   },
   extraReducers: {
     // get All likes of a post
     [createNewComment.pending]: (state) => {},
     [createNewComment.fulfilled]: (state, { payload }) => {
-      if (payload.status === 200) {
+      if (payload.status === 201) {
         state.commentSuccess = true;
+        state.postComment.push(payload.result);
       }
       state.comment = payload;
     },
@@ -63,6 +74,9 @@ const commentSlice = createSlice({
     [deleteComment.fulfilled]: (state, { payload }) => {
       if (payload.status === 200) {
         state.deleteSucess = true;
+        state.postComment = state.postComment.filter(
+          (comment) => comment.id != payload.id
+        );
       }
       state.deletedComment = payload;
     },
@@ -70,6 +84,11 @@ const commentSlice = createSlice({
   },
 });
 
-export const { deletePostComment } = commentSlice.actions;
+export const {
+  deletePostComment,
+  removeCommentStatus,
+  editLocalComment,
+  removeDeleteStatus,
+} = commentSlice.actions;
 
 export default commentSlice.reducer;

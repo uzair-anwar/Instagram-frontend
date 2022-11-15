@@ -5,6 +5,8 @@ import Home from "./Home";
 import { useDispatch } from "react-redux";
 import { getUserDetails } from "../app/features/user/userAction";
 import Login from "../Components/Account/Login";
+import { getFollowings } from "../app/features/user/userAction";
+import { getAllPost } from "../app/features/post/postAction";
 
 const Main = () => {
   const { userToken } = useSelector((state) => state.user);
@@ -13,8 +15,10 @@ const Main = () => {
   useEffect(() => {
     if (userToken) {
       dispatch(getUserDetails());
+      dispatch(getFollowings());
+      dispatch(getAllPost());
     }
-  }, [userToken, dispatch]);
+  }, []);
 
   return userToken ? <Home /> : <Login />;
 };

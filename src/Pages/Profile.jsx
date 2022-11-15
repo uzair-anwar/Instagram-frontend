@@ -9,7 +9,7 @@ import Requests from "../Components/Account/Requests";
 import SingleStory from "../Components/story/SingleStory";
 
 const Profile = () => {
-  let { userInfo, userToken, requests } = useSelector((state) => state.user);
+  let { userInfo, requests } = useSelector((state) => state.user);
   let { selfStories } = useSelector((state) => state.story);
   const [showPost, setShowPost] = useState(false);
   const [singlePost, setSinglePost] = useState(null);
@@ -17,13 +17,6 @@ const Profile = () => {
   const [storySection, setStorySection] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // automatically authenticate user if token is found
-  useEffect(() => {
-    if (userToken) {
-      dispatch(getUserDetails());
-    }
-  }, [userToken, dispatch]);
 
   const handlePost = (post) => {
     setSinglePost(post);
@@ -43,7 +36,7 @@ const Profile = () => {
   const handleStories = () => {
     dispatch(getSelfStories());
     if (storySection === false) setStorySection(true);
-    else setStorySection(true);
+    else setStorySection(false);
   };
 
   return (

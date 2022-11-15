@@ -5,7 +5,6 @@ import {
   editPost,
   getAllPost,
   doLike,
-  getAllLikes,
 } from "./postAction";
 
 const initialState = {
@@ -33,11 +32,11 @@ const postSlice = createSlice({
       state.error = null;
     },
     deleteSinglePost: (state, action) => {
-      state.posts = state.posts.filter((post) => post.id !== action.payload);
       state.deleteResult = null;
     },
     removeEdit: (state) => {
       state.edit = null;
+      state.editSuccess = false;
     },
   },
   extraReducers: {
@@ -50,6 +49,7 @@ const postSlice = createSlice({
       if (payload.status === 201) {
         state.loading = false;
         state.success = true;
+        state.posts.push(payload.post);
       }
       state.createPost = payload;
     },
@@ -65,6 +65,7 @@ const postSlice = createSlice({
     [deletePost.fulfilled]: (state, { payload }) => {
       if (payload.status === 200) {
         state.deleteSuccess = true;
+        state.posts = state.posts.filter((post) => post.id != payload.id);
       }
 
       state.deleteResult = payload;
@@ -96,18 +97,17 @@ const postSlice = createSlice({
     },
     [doLike.rejected]: (state, { payload }) => {},
 
-    // get All likes of a post
-    [getAllLikes.pending]: (state) => {},
-    [getAllLikes.fulfilled]: (state, { payload }) => {
-      state.allLikes = payload;
-    },
-    [getAllLikes.rejected]: (state, { payload }) => {},
-
     // edited a post
     [editPost.pending]: (state) => {},
     [editPost.fulfilled]: (state, { payload }) => {
       if (payload.status === 200) {
         state.editSuccess = true;
+        state.posts = state.posts.map((object) => {
+          if (object.id == payload.id) {
+            return { ...object, caption: payload.caption };
+          }
+          return object;
+        });
       }
       state.edit = payload;
     },

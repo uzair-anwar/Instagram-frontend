@@ -2,25 +2,11 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../StyleSheets/404Page-style.css";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const notify = (message) => {
-  toast.error(message, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
-
 const UndefineRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    notify("There's nothing here: 404!");
+    toast.error("There's nothing here: 404!");
   }, []);
 
   const back = () => {

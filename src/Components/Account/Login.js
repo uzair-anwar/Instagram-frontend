@@ -8,24 +8,11 @@ import "../../StyleSheets/account-style.css";
 import { userLogin } from "../../app/features/user/userAction";
 import { signedUp } from "../../app/features/user/userSlice";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const notify = (message) => {
-  toast.success(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const { userToken, error } = useSelector((state) => state.user);
+  const { userToken, error, loginMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,11 +20,13 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
+    if (loginMessage?.status !== 200) {
+      toast.success(loginMessage?.message);
+    }
     if (userToken) {
-      notify("Loged in successfully");
       navigate("/");
     }
-  }, [navigate, userToken]);
+  }, [navigate, userToken, loginMessage]);
 
   const onSubmit = async (values) => {
     const user = {
@@ -54,10 +43,19 @@ const Login = () => {
     },
 
     validationSchema: Yup.object({
-      email: Yup.string().required("Required").email("Invalid email address"),
+      email: Yup.string()
+        .required("Email is required")
+        .email("Invalid email address"),
       password: Yup.string()
-        .min(6, "Password should be greater than 6 digit")
-        .required("Required"),
+        // .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+        // .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
+        // .matches(/\d/, "Password must have a numner")
+        // .matches(
+        //   /[!@#$%^&*()\-_"=+{}; :,<.>]/,
+        //   "Password must have a special character"
+        // )
+        .min(6, ({ min }) => `Password must be at least ${min} characters`)
+        .required("Password is required"),
     }),
 
     onSubmit,

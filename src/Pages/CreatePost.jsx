@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@material-ui/core";
 import "../StyleSheets/navbar-style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewPost, getAllPost } from "../app/features/post/postAction";
+import { createNewPost } from "../app/features/post/postAction";
 
 const CreatePost = () => {
   const { error, success } = useSelector((state) => state.post);
@@ -12,7 +12,6 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (success) {
-      dispatch(getAllPost());
       navigate("/");
     }
   }, [navigate, success, dispatch]);
@@ -62,6 +61,7 @@ const CreatePost = () => {
 
   return (
     <div className="card input-filed create-post">
+      <p className="text-xxl-center">Create a Post</p>
       <Input
         className="my-2"
         type="text"

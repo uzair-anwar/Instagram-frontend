@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { TextField } from "@material-ui/core";
 import CommentForm from "./CommentForm";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createNewComment,
-  getPostComment,
-} from "../../app/features/comment/commentAction";
+import { createNewComment } from "../../app/features/comment/commentAction";
 
 const Comment = ({ post }) => {
-  console.log("Render");
-  const { editSuccess, deletedSuccess, commentSuccess, postComment } =
-    useSelector((state) => state.comment);
+  const { postComment } = useSelector((state) => state.comment);
   const dispatch = useDispatch();
   const [commentError, setCommentError] = useState(null);
   const [commentText, setCommentText] = useState("");
-
-  useEffect(() => {
-    if (editSuccess || deletedSuccess || commentSuccess)
-      dispatch(getPostComment({ postId: post.id }));
-  }, [editSuccess, commentSuccess, deletedSuccess, dispatch, post.id]);
 
   const checkComment = () => {
     if (commentText.length === 0) {

@@ -147,35 +147,3 @@ export const doLike = createAsyncThunk(
     }
   }
 );
-
-export const getAllLikes = createAsyncThunk(
-  "post/getAllLikes",
-  async (postId, { getState, rejectWithValue }) => {
-    try {
-      // get user data from store
-      const { user } = getState();
-
-      // configure authorization header with user's token
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.userToken}`,
-        },
-      };
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_SERVER_API}/post/likes`,
-        config
-      );
-
-      const result = data.result.reduce((prev, curr) => {
-        return { ...prev, [curr.postId]: curr.likeCount };
-      }, {});
-      return result;
-    } catch (error) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
