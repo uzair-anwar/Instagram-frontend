@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "12.11.1"
+    "node": "18.x",
+    "npm": "8.x"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -37,6 +38,7 @@
     "react-scripts": "^5.0.1",
     "react-toastify": "^5.5.0",
     "redux": "^4.2.0",
+    "serve": "^14.1.1",
     "server": "^1.0.37",
     "socket.io-client": "^4.5.2",
     "swiper": "^6.8.4",

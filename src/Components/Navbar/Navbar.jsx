@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import { CgProfile } from "react-icons/cg";
 import { IoCreateOutline } from "react-icons/io5";
-import { FiLogOut, FiLogIn } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
 import { BsMessenger } from "react-icons/bs";
 import {
   getUserDetails,
@@ -55,7 +55,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-expand-sm  navbar-light bg-white justify-content-between mt-4">
+    <nav className="navbar navbar-expand-lg navbar-expand-sm  navbar-light bg-white justify-content-between mt-2">
       <NavLink to="/" className="navbar-brand insta-logo left">
         Instagram
       </NavLink>
